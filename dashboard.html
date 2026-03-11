@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Zyroo | Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #020617;
+      --surface: #020617;
+      --panel: #020617;
+      --accent: #6366f1;
+      --accent-soft: rgba(99, 102, 241, 0.15);
+      --accent-strong: rgba(129, 140, 248, 0.35);
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --border-subtle: rgba(148, 163, 184, 0.22);
+      --border-strong: rgba(148, 163, 184, 0.4);
+      --radius-lg: 24px;
+      --radius-md: 16px;
+      --radius-pill: 999px;
+      --shadow-deep: 0 28px 80px rgba(15, 23, 42, 0.95);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 0% 0%, #1e293b 0, transparent 45%),
+        radial-gradient(circle at 100% 100%, #020617 0, #020617 55%, #000 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 18px;
+    }
+
+    .frame {
+      width: 100%;
+      max-width: 1080px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+      background:
+        radial-gradient(circle at top left, rgba(148, 163, 184, 0.12), transparent 55%),
+        radial-gradient(circle at bottom right, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.98));
+      box-shadow: var(--shadow-deep);
+      padding: 18px 18px 18px 18px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.4fr);
+      gap: 18px;
+    }
+
+    .sidebar {
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.98));
+      padding: 16px 15px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .main {
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+      background: radial-gradient(circle at 0 0, rgba(37, 99, 235, 0.12), transparent 55%),
+                  radial-gradient(circle at 100% 100%, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.99));
+      padding: 18px 18px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .main::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 80% 0%, rgba(129, 140, 248, 0.3), transparent 65%),
+        radial-gradient(circle at 0% 80%, rgba(236, 72, 153, 0.2), transparent 65%);
+      mix-blend-mode: soft-light;
+      opacity: 0.75;
+      pointer-events: none;
+    }
+
+    .main-inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .pill-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.5);
+    }
+
+    .pill-kv {
+      margin-left: auto;
+      padding: 3px 9px;
+      border-radius: var(--radius-pill);
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .sidebar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-logo {
+      width: 30px;
+      height: 30px;
+      border-radius: 12px;
+      background: radial-gradient(circle at 30% 20%, #4f46e5, #020617);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      color: #e5e7eb;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.9);
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .brand-title {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .brand-sub {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .chip {
+      padding: 4px 9px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      background: rgba(15, 23, 42, 0.9);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .sidebar-main {
+      padding-top: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .sidebar-title {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .sidebar-subtitle {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .license-card {
+      margin-top: 2px;
+      border-radius: 14px;
+      border: 1px solid rgba(30, 64, 175, 0.9);
+      background: radial-gradient(circle at top, rgba(37, 99, 235, 0.22), rgba(15, 23, 42, 0.98));
+      padding: 10px 11px 9px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .license-row-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .license-tier {
+      padding: 3px 9px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(191, 219, 254, 0.9);
+      background: rgba(15, 23, 42, 0.9);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #dbeafe;
+    }
+
+    .license-key {
+      font-family: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 13px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      background: rgba(15, 23, 42, 0.95);
+      border-radius: 999px;
+      padding: 8px 10px;
+      border: 1px solid rgba(129, 140, 248, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .license-key span {
+      white-space: nowrap;
+    }
+
+    .btn-ghost {
+      border: none;
+      outline: none;
+      background: rgba(15, 23, 42, 0.95);
+      border-radius: 999px;
+      padding: 4px 8px;
+      font-size: 11px;
+      color: #bfdbfe;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+    }
+
+    .btn-ghost-icon {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 1px solid rgba(191, 219, 254, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+    }
+
+    .license-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    .license-pill {
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px dashed rgba(148, 163, 184, 0.5);
+      background: rgba(15, 23, 42, 0.95);
+    }
+
+    .sidebar-footer {
+      margin-top: 6px;
+      padding-top: 8px;
+      border-top: 1px dashed rgba(148, 163, 184, 0.3);
+      font-size: 10px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .badge-soft {
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      font-size: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge-soft-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #22c55e;
+    }
+
+    .main-headline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .main-title {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .main-title h1 {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    .main-title p {
+      font-size: 12px;
+      color: #e5e7eb;
+    }
+
+    .main-tagline {
+      font-size: 11px;
+      color: var(--muted);
+      max-width: 220px;
+      text-align: right;
+    }
+
+    .stats-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .stat-card {
+      flex: 1;
+      border-radius: 14px;
+      border: 1px solid rgba(30, 64, 175, 0.8);
+      background: rgba(15, 23, 42, 0.9);
+      padding: 9px 10px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 11px;
+    }
+
+    .stat-label {
+      color: var(--muted);
+    }
+
+    .stat-value {
+      font-size: 16px;
+      font-weight: 600;
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+
+    .stat-unit {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .stat-foot {
+      font-size: 10px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pill-mini {
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: rgba(21, 128, 61, 0.16);
+      border: 1px solid rgba(34, 197, 94, 0.8);
+      font-size: 10px;
+      color: #bbf7d0;
+    }
+
+    .graph {
+      margin-top: 2px;
+      border-radius: 14px;
+      border: 1px dashed rgba(148, 163, 184, 0.6);
+      background: radial-gradient(circle at 10% 0%, rgba(59, 130, 246, 0.3), transparent 60%),
+                  radial-gradient(circle at 90% 100%, rgba(236, 72, 153, 0.3), transparent 60%),
+                  rgba(15, 23, 42, 0.96);
+      padding: 10px 10px 9px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .graph-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .graph-legend {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .graph-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+    }
+
+    .graph-dot.primary {
+      background: #4f46e5;
+    }
+
+    .graph-dot.secondary {
+      background: #f97316;
+    }
+
+    .graph-body {
+      position: relative;
+      height: 90px;
+      overflow: hidden;
+      border-radius: 10px;
+      background: radial-gradient(circle at bottom, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.98));
+      border: 1px solid rgba(30, 64, 175, 0.8);
+    }
+
+    .graph-grid {
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(to right, rgba(51, 65, 85, 0.4) 1px, transparent 1px),
+                        linear-gradient(to top, rgba(51, 65, 85, 0.4) 1px, transparent 1px);
+      background-size: 26px 22px;
+      opacity: 0.7;
+    }
+
+    .graph-line {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: flex-end;
+      padding: 0 6px 4px;
+      gap: 4px;
+    }
+
+    .graph-bar {
+      flex: 1;
+      border-radius: 999px;
+      background: linear-gradient(to top, rgba(129, 140, 248, 0.9), rgba(56, 189, 248, 0.9));
+      opacity: 0.85;
+    }
+
+    .graph-bar.secondary {
+      background: linear-gradient(to top, rgba(249, 115, 22, 0.95), rgba(250, 204, 21, 0.95));
+      opacity: 0.75;
+    }
+
+    .graph-footer {
+      margin-top: 2px;
+      font-size: 10px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .footer-row {
+      margin-top: 2px;
+      padding-top: 6px;
+      border-top: 1px dashed rgba(148, 163, 184, 0.3);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 10px;
+      color: var(--muted);
+      gap: 8px;
+    }
+
+    .footer-actions {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .btn-outline {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.9);
+      padding: 4px 9px;
+      font-size: 10px;
+      color: #e5e7eb;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .btn-outline span:nth-child(1) {
+      font-size: 11px;
+    }
+
+    .btn-primary {
+      border-radius: 999px;
+      border: none;
+      outline: none;
+      padding: 6px 12px;
+      font-size: 11px;
+      font-weight: 500;
+      background: linear-gradient(135deg, #4f46e5, #6366f1);
+      color: white;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      cursor: pointer;
+      box-shadow: 0 14px 32px rgba(79, 70, 229, 0.7);
+    }
+
+    .btn-primary-icon {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(219, 234, 254, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+    }
+
+    @media (max-width: 860px) {
+      .frame {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 18px 12px;
+      }
+
+      .frame {
+        padding: 14px;
+      }
+
+      .sidebar,
+      .main {
+        padding: 12px 11px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="brand">
+          <div class="brand-logo">Z</div>
+          <div class="brand-text">
+            <span class="brand-title">ZYROO</span>
+            <span class="brand-sub">DASHBOARD ACCESS</span>
+          </div>
+        </div>
+        <span class="chip">LICENSED SESSION</span>
+      </div>
+
+      <div class="sidebar-main">
+        <div>
+          <div class="pill">
+            <span class="pill-dot"></span>
+            <span>License validated</span>
+          </div>
+        </div>
+
+        <div>
+          <h2 class="sidebar-title">Hoş geldiniz.</h2>
+          <p class="sidebar-subtitle">
+            Lisansınız başarıyla doğrulandı. Bu demo ekranda, yalnızca görsel bir
+            dashboard tasarımı gösterilmektedir.
+          </p>
+        </div>
+
+        <div class="license-card">
+          <div class="license-row-top">
+            <span>Aktif lisans anahtarı</span>
+            <span class="license-tier">TRIAL DEMO</span>
+          </div>
+          <div class="license-key">
+            <span id="active-license">A7FF-8A80-CB97-9892</span>
+            <button class="btn-ghost" id="copy-license" type="button">
+              <span class="btn-ghost-icon">⧉</span>
+              <span>Copy</span>
+            </button>
+          </div>
+          <div class="license-meta">
+            <span class="license-pill">Status: active</span>
+            <span class="license-pill">Scope: dashboard demo</span>
+            <span class="license-pill">Environment: local only</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <span>Bu proje, orijinal Zyroo sayfasına benzeyen <strong>yerel bir kopyadır</strong>.</span>
+        <span class="badge-soft">
+          <span class="badge-soft-dot"></span>
+          <span>Local only</span>
+        </span>
+      </div>
+    </aside>
+
+    <section class="main">
+      <div class="main-inner">
+        <div class="main-headline">
+          <div class="main-title">
+            <h1>Zyroo Dashboard</h1>
+            <p>Authenticated license view</p>
+          </div>
+          <p class="main-tagline">
+            Bu alan tamamen örnek amaçlı tasarlanmıştır. Gerçek veri veya gerçek
+            lisans servisine bağlı değildir.
+          </p>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-label">License uptime</div>
+            <div class="stat-value">
+              <span id="uptime-value">00:00</span>
+              <span class="stat-unit">hh:mm</span>
+            </div>
+            <div class="stat-foot">
+              <span>Oturum süresi</span>
+              <span class="pill-mini">LIVE</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Session integrity</div>
+            <div class="stat-value">
+              <span>100</span>
+              <span class="stat-unit">/ 100</span>
+            </div>
+            <div class="stat-foot">
+              <span>Yerel demo</span>
+              <span>Simulated</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="graph">
+          <div class="graph-header">
+            <span>Lisans aktivite yoğunluğu</span>
+            <div class="graph-legend">
+              <span class="graph-dot primary"></span>
+              <span>Access checks</span>
+              <span class="graph-dot secondary"></span>
+              <span>UI interactions</span>
+            </div>
+          </div>
+          <div class="graph-body">
+            <div class="graph-grid"></div>
+            <div class="graph-line" id="graph-bars">
+              <!-- JS ile doldurulacak -->
+            </div>
+          </div>
+          <div class="graph-footer">
+            <span>Demo grafik, yalnızca görsel örnek için oluşturuldu.</span>
+            <span>Real backend yok.</span>
+          </div>
+        </div>
+
+        <div class="footer-row">
+          <div>Bu demo tamamen <strong>front‑end</strong> tarafından çalışır.</div>
+          <div class="footer-actions">
+            <button class="btn-outline" id="back-to-login" type="button">
+              <span>←</span>
+              <span>License ekranına dön</span>
+            </button>
+            <button class="btn-primary" id="fake-refresh" type="button">
+              <span class="btn-primary-icon">⟳</span>
+              <span>Simüle et</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // Basit uptime sayacı
+    const uptimeEl = document.getElementById("uptime-value");
+    let seconds = 0;
+    setInterval(() => {
+      seconds++;
+      const m = String(Math.floor(seconds / 60)).padStart(2, "0");
+      const s = String(seconds % 60).padStart(2, "0");
+      uptimeEl.textContent = m + ":" + s;
+    }, 1000);
+
+    // Basit çubuk grafik
+    const graphBars = document.getElementById("graph-bars");
+    function renderBars() {
+      graphBars.innerHTML = "";
+      const count = 10;
+      for (let i = 0; i < count; i++) {
+        const group = document.createElement("div");
+        group.style.display = "flex";
+        group.style.flexDirection = "column";
+        group.style.justifyContent = "flex-end";
+        group.style.flex = "1";
+        group.style.gap = "2px";
+
+        const bar1 = document.createElement("div");
+        bar1.className = "graph-bar";
+        bar1.style.height = 20 + Math.random() * 60 + "px";
+
+        const bar2 = document.createElement("div");
+        bar2.className = "graph-bar secondary";
+        bar2.style.height = 10 + Math.random() * 40 + "px";
+
+        group.appendChild(bar1);
+        group.appendChild(bar2);
+        graphBars.appendChild(group);
+      }
+    }
+
+    renderBars();
+
+    // Simulate button grafiği tazeler
+    document.getElementById("fake-refresh").addEventListener("click", () => {
+      renderBars();
+    });
+
+    // Copy license
+    document.getElementById("copy-license").addEventListener("click", async () => {
+      try {
+        const text = document.getElementById("active-license").textContent.trim();
+        await navigator.clipboard.writeText(text);
+        alert("Lisans anahtarı kopyalandı: " + text);
+      } catch {
+        alert("Kopyalama desteklenmiyor, elle seçip kopyalayın.");
+      }
+    });
+
+    // Geri dön
+    document.getElementById("back-to-login").addEventListener("click", () => {
+      const url = new URL(window.location.href);
+      url.pathname = url.pathname.replace(/[^\/]+$/, "index.html");
+      window.location.href = url.toString();
+    });
+  </script>
+</body>
+</html>
+
